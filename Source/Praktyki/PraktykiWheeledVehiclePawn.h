@@ -24,6 +24,15 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
 	class UPraktykiInputDataAsset* InputDataAsset;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Engine Sound")
+	float IdleRPM;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Engine Sound")
+	float MaxRPM;
+
+	UPROPERTY(BlueprintReadOnly)
+	float RevPercent = 0.0f;
+
 public:
 	void AccelerationProc(const FInputActionValue& Value);
 	void SteeringProc(const FInputActionValue& Value);

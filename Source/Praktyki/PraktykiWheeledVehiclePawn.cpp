@@ -52,5 +52,10 @@ void APraktykiWheeledVehiclePawn::SetupPlayerInputComponent(class UInputComponen
 
 void APraktykiWheeledVehiclePawn::Tick(float DeltaTime)
 {
+    float EngineRPM = GetVehicleMovementComponent()->PhysicsVehicleOutput()->EngineRPM;
+    RevPercent = (EngineRPM - IdleRPM) / (MaxRPM - IdleRPM);
+    //NormalizedEngineRPM = GetVehicleMovementComponent()->PhysicsVehicleOutput()->EngineRPM / 9000.0f;
     //this->GetVehicleMovementComponent()->SetThrottleInput(0.1f);
+
+    Super::Tick(DeltaTime);
 }
