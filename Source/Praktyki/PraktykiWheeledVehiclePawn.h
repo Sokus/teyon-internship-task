@@ -27,6 +27,8 @@ public:
 public:
 	void AccelerationProc(const FInputActionValue& Value);
 	void SteeringProc(const FInputActionValue& Value);
+	void BrakeProc(const FInputActionValue& Value);
+	void HandbrakeProc(const FInputActionValue& Value);
 
 
 	void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent);

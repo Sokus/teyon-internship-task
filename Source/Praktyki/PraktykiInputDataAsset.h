@@ -22,4 +22,10 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly);
 	UInputAction *InputSteering;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly);
+	UInputAction *InputBrake;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly);
+	UInputAction *InputHandbrake;
 };

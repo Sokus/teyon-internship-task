@@ -13,12 +13,26 @@
 
 void APraktykiWheeledVehiclePawn::AccelerationProc(const FInputActionValue& Value)
 {
-    UE_LOG(LogTemp, Warning, TEXT("AccelerationProc"));
+    const float AccelerationValue = Value.Get<float>();
+    GetVehicleMovementComponent()->SetThrottleInput(AccelerationValue);
 }
 
 void APraktykiWheeledVehiclePawn::SteeringProc(const FInputActionValue& Value)
 {
-    UE_LOG(LogTemp, Warning, TEXT("SteeringProc"));
+    const float SteeringValue = Value.Get<float>();
+    GetVehicleMovementComponent()->SetSteeringInput(SteeringValue);
+}
+
+void APraktykiWheeledVehiclePawn::BrakeProc(const FInputActionValue& Value)
+{
+    const float BrakeValue = Value.Get<float>();
+    GetVehicleMovementComponent()->SetBrakeInput(BrakeValue);
+}
+
+void APraktykiWheeledVehiclePawn::HandbrakeProc(const FInputActionValue& Value)
+{
+    const bool HandbrakeValue = Value.Get<bool>();
+    GetVehicleMovementComponent()->SetHandbrakeInput(HandbrakeValue);
 }
 
 void APraktykiWheeledVehiclePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -32,6 +46,8 @@ void APraktykiWheeledVehiclePawn::SetupPlayerInputComponent(class UInputComponen
     UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
     EnhancedInputComponent->BindAction(InputDataAsset->InputAccelerate, ETriggerEvent::Triggered, this, &APraktykiWheeledVehiclePawn::AccelerationProc);
     EnhancedInputComponent->BindAction(InputDataAsset->InputSteering, ETriggerEvent::Triggered, this, &APraktykiWheeledVehiclePawn::SteeringProc);
+    EnhancedInputComponent->BindAction(InputDataAsset->InputBrake, ETriggerEvent::Triggered, this, &APraktykiWheeledVehiclePawn::BrakeProc);
+    EnhancedInputComponent->BindAction(InputDataAsset->InputHandbrake, ETriggerEvent::Triggered, this, &APraktykiWheeledVehiclePawn::HandbrakeProc);
 }
 
 void APraktykiWheeledVehiclePawn::Tick(float DeltaTime)
