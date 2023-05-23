@@ -33,13 +33,15 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	float RevPercent = 0.0f;
 
+	UFUNCTION(BlueprintCallable)
+	void Overlap(AActor* Other);
+
 public:
 	void AccelerationProc(const FInputActionValue& Value);
 	void SteeringProc(const FInputActionValue& Value);
 	void BrakeProc(const FInputActionValue& Value);
 	void HandbrakeProc(const FInputActionValue& Value);
 
-
 	void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent);
-	void Tick(float DeltaTime);
+	virtual void Tick(float DeltaTime) override;
 };

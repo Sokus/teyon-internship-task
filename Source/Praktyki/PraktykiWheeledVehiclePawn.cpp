@@ -11,6 +11,15 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInput/Public/EnhancedInputComponent.h"
 
+#include "Components/BoxComponent.h"
+
+void APraktykiWheeledVehiclePawn::Overlap(AActor* Other) {
+	if ((Other != NULL) && (Other != this))
+	{
+		if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("WheeledVehiclePawn hit: %s"), *Other->GetName()));
+	}
+}
+
 void APraktykiWheeledVehiclePawn::AccelerationProc(const FInputActionValue& Value)
 {
     const float AccelerationValue = Value.Get<float>();
@@ -52,6 +61,7 @@ void APraktykiWheeledVehiclePawn::SetupPlayerInputComponent(class UInputComponen
 
 void APraktykiWheeledVehiclePawn::Tick(float DeltaTime)
 {
+
     float EngineRPM = GetVehicleMovementComponent()->PhysicsVehicleOutput()->EngineRPM;
     RevPercent = (EngineRPM - IdleRPM) / (MaxRPM - IdleRPM);
     //NormalizedEngineRPM = GetVehicleMovementComponent()->PhysicsVehicleOutput()->EngineRPM / 9000.0f;
