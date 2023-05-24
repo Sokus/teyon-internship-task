@@ -7,11 +7,11 @@
 #include "PraktykiGameModeBase.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class PRAKTYKI_API APraktykiGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
 };

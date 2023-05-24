@@ -3,6 +3,7 @@
 
 #include "PraktykiWheeledVehiclePawn.h"
 #include "PraktykiInputDataAsset.h"
+#include "PraktykiTrackGrass.h"
 
 #include "WheeledVehiclePawn.h"
 #include "ChaosVehicleMovementComponent.h"
@@ -13,10 +14,18 @@
 
 #include "Components/BoxComponent.h"
 
+
 void APraktykiWheeledVehiclePawn::Overlap(AActor* Other) {
 	if ((Other != NULL) && (Other != this))
 	{
-		if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("WheeledVehiclePawn hit: %s"), *Other->GetName()));
+        if (APraktykiTrackGrass *TrackGrass = Cast<APraktykiTrackGrass>(Other))
+        {
+            if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::Printf(TEXT("Overlaped with TrackGrass")));
+        }
+        else
+        {
+		    if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("WheeledVehiclePawn hit: %s"), *Other->GetName()));
+        }
 	}
 }
 
