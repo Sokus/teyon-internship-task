@@ -33,8 +33,8 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	float RevPercent = 0.0f;
 
-	UFUNCTION(BlueprintCallable)
-	void Overlap(AActor* Other);
+protected:
+	virtual void BeginPlay() override;
 
 public:
 	void AccelerationProc(const FInputActionValue& Value);

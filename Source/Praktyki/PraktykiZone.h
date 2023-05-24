@@ -4,16 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PraktykiTrackGrass.generated.h"
+#include "PraktykiZone.generated.h"
+
+UENUM()
+enum class EPraktykiZoneType : uint8
+{
+	StartFinish,
+	Checkpoint,
+};
 
 UCLASS()
-class PRAKTYKI_API APraktykiTrackGrass : public AActor
+class PRAKTYKI_API APraktykiZone : public AActor
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
-	APraktykiTrackGrass();
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	EPraktykiZoneType Type;
+
+	APraktykiZone();
 
 protected:
 	// Called when the game starts or when spawned

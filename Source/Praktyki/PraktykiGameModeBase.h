@@ -14,4 +14,13 @@ class PRAKTYKI_API APraktykiGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
+public:
+	void OnWentOffTrack(void);
+	void OnZoneOverlap(AActor *Zone);
+
+protected:
+	virtual void BeginPlay() override;
+
+private:
+	TArray<AActor*> ZoneActors;
 };
