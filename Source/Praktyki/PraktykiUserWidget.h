@@ -20,4 +20,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateLastTime(float NewLastTime, bool bCutDetected);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateLaps(int Laps, int MaxLaps);
 };

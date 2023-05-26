@@ -15,11 +15,8 @@ APraktykiGameModeBase::APraktykiGameModeBase()
 
 void APraktykiGameModeBase::OnWentOffTrack(void)
 {
-    if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::Printf(TEXT("Went off-track")));
     bCutDetected = true;
 }
-
-
 
 void APraktykiGameModeBase::OnZoneOverlap(AActor *Zone)
 {
@@ -54,7 +51,18 @@ void APraktykiGameModeBase::OnZoneOverlap(AActor *Zone)
                         }
 
                         LastTime = Time;
+
+                        if (LapLimit > 0 && Laps == LapLimit)
+                        {
+                            GameFinished();
+                        }
+                        else
+                        {
+                            Laps += 1;
+                        }
+
                         PraktykiUserWidget->UpdateLastTime(LastTime, bCutDetected);
+                        PraktykiUserWidget->UpdateLaps(Laps, LapLimit);
 
                         for (int32 ClearZoneIndex = 0; ClearZoneIndex < ZoneActors.Num(); ClearZoneIndex += 1)
                         {
@@ -62,6 +70,10 @@ void APraktykiGameModeBase::OnZoneOverlap(AActor *Zone)
                         }
                         bCutDetected = false;
                         Time = 0.0f;
+                    }
+                    else
+                    {
+                        bLapsStarted = true;
                     }
 
                     ZoneInteractionInfos[ZoneIndex].bWasVisited = true;
@@ -82,8 +94,11 @@ void APraktykiGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
 
-    Laps = 0;
+    Laps = 1;
     Time = LastTime = BestTime = 0.0f;
+    bCutDetected = bLapsStarted = false;
+    LapLimit = 0;
+
 
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), APraktykiZone::StaticClass(), ZoneActors);
 
@@ -92,8 +107,10 @@ void APraktykiGameModeBase::BeginPlay()
     UGameInstance *GameInstance = UGameplayStatics::GetGameInstance(GetWorld());
     if (UPraktykiGameInstance *PraktykiGameInstance = Cast<UPraktykiGameInstance>(GameInstance))
     {
-        //UE_LOG(LogTemp, Warning, TEXT("Lap limit: %d"), PraktykiGameInstance->LapLimit);
+        TimeLeft = PraktykiGameInstance->TimeLimit;
+        LapLimit = PraktykiGameInstance->LapLimit;
     }
+    PraktykiUserWidget->UpdateLaps(Laps, LapLimit);
 }
 
 void APraktykiGameModeBase::EndPlay(EEndPlayReason::Type EndPlayReason)
@@ -106,4 +123,16 @@ void APraktykiGameModeBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
     Time += DeltaTime;
+
+    if (bLapsStarted)
+    {
+        if (TimeLeft > 0.0f && TimeLeft <= DeltaTime)
+        {
+            GameFinished();
+        }
+
+        TimeLeft -= DeltaTime;
+        if (TimeLeft < 0.0f) TimeLeft = 0.0f;
+    }
+
 }

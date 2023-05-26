@@ -32,6 +32,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetTime() { return Time; }
 
+	UFUNCTION(BlueprintCallable)
+	bool WasCutDetected() { return bCutDetected; }
+
+	UFUNCTION(BlueprintCallable)
+	float GetTimeLeft() { return TimeLeft; }
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void GameFinished();
+
 	void OnWentOffTrack(void);
 	void OnZoneOverlap(AActor *Zone);
 
@@ -39,11 +48,15 @@ public:
 	class UPraktykiUserWidget *PraktykiUserWidget;
 
 protected:
+	bool bLapsStarted;
 	int Laps;
 	float Time;
 	float LastTime;
 	float BestTime;
 	bool bCutDetected;
+
+	float TimeLeft;
+	int LapLimit;
 
 	virtual void BeginPlay() override;
 	virtual void EndPlay(EEndPlayReason::Type EndPlayReason);

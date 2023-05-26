@@ -16,13 +16,7 @@ class PRAKTYKI_API UPraktykiGameInstance : public UGameInstance
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bLimitLaps;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int LapLimit;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bLimitTime;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float TimeLimit;
