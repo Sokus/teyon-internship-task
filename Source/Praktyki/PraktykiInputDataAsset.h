@@ -28,4 +28,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly);
 	UInputAction *InputHandbrake;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly);
+	UInputAction *InputCameraChange;
 };
