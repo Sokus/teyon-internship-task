@@ -8,19 +8,27 @@
 
 #include "WheeledVehiclePawn.h"
 #include "ChaosVehicleMovementComponent.h"
+#include "ChaosWheeledVehicleMovementComponent.h"
 
 #include "InputMappingContext.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInput/Public/EnhancedInputComponent.h"
 
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
+
 #include "Components/BoxComponent.h"
 
 #include "Kismet/GameplayStatics.h"
 
+#include "Math/UnrealMathUtility.h"
 
 void APraktykiWheeledVehiclePawn::BeginPlay()
 {
     Super::BeginPlay();
+
+    TireNiagaraComponents.Init(nullptr, 4);
+    TireEffectsCooldown = 0.0f;
 }
 
 void APraktykiWheeledVehiclePawn::AccelerationProc(const FInputActionValue& Value)
@@ -70,5 +78,63 @@ void APraktykiWheeledVehiclePawn::Tick(float DeltaTime)
     //NormalizedEngineRPM = GetVehicleMovementComponent()->PhysicsVehicleOutput()->EngineRPM / 9000.0f;
     //this->GetVehicleMovementComponent()->SetThrottleInput(0.1f);
 
+    if (TireEffectsCooldown <= 0.0f)
+    {
+        TireEffects();
+        TireEffectsCooldown = 0.2f;
+    }
+    else
+    {
+        TireEffectsCooldown -= DeltaTime;
+    }
+
     Super::Tick(DeltaTime);
+}
+
+void APraktykiWheeledVehiclePawn::TireEffects()
+{
+    UChaosWheeledVehicleMovementComponent *WheeledVehicleMovementComponent = Cast<UChaosWheeledVehicleMovementComponent>(GetVehicleMovementComponent());
+    if (WheeledVehicleMovementComponent == nullptr) return;
+
+    for (int32 WheelIndex = 2;
+         WheelIndex < WheeledVehicleMovementComponent->GetNumWheels() && WheelIndex <= 3;
+         WheelIndex += 1)
+    {
+        const FWheelStatus& WheelStatus = WheeledVehicleMovementComponent->GetWheelState(WheelIndex);
+        bool bIsDrifting = ((WheelStatus.bIsSkidding || WheelStatus.bIsSlipping) && WheelStatus.bInContact);
+        if (bIsDrifting)
+        {
+            if (TireNiagaraComponents[WheelIndex] == nullptr)
+            {
+                USceneComponent *AttachToComponent = WheelIndex == 2 ? TireEmitterBackLeft : TireEmitterBackRight;
+                TireNiagaraComponents[WheelIndex] = UNiagaraFunctionLibrary::SpawnSystemAttached(
+                    TireNiagaraSysytem, AttachToComponent, FName(), FVector(), FRotator(), EAttachLocation::Type::KeepRelativeOffset, false
+                );
+            }
+
+            if (TireNiagaraComponents[WheelIndex] != nullptr)
+            {
+                float SlipMagnitudeAbsRangeClamped = FMath::GetMappedRangeValueClamped(TRange<float>::TRange(600.0f, 1000.0f), TRange<float>::TRange(0.0f, 1.0f), FMath::Abs(WheelStatus.SlipMagnitude));
+                float SkidMagnitudeAbsRangeClamped = FMath::GetMappedRangeValueClamped(TRange<float>::TRange(1000.0f, 1500.0f), TRange<float>::TRange(0.0f, 1.0f), FMath::Abs(WheelStatus.SkidMagnitude));
+                float SkidMarkOpacityValue = FMath::Clamp(SlipMagnitudeAbsRangeClamped+SkidMagnitudeAbsRangeClamped, 0.0f, 1.0f);
+
+                TireNiagaraComponents[WheelIndex]->SetFloatParameter(SmokeSpawnRate, FMath::Sign(FMath::Abs(WheelStatus.SlipMagnitude)));
+                TireNiagaraComponents[WheelIndex]->SetFloatParameter(SkidMarkOpacity, SkidMarkOpacityValue);
+            }
+        }
+        else
+        {
+            if (TireNiagaraComponents[WheelIndex] != nullptr)
+            {
+                TireNiagaraComponents[WheelIndex]->SetFloatParameter(SmokeSpawnRate, 0.0f);
+                TireNiagaraComponents[WheelIndex]->SetFloatParameter(SkidMarkOpacity, 0.0f);
+                FDetachmentTransformRules DetachmentTransformRules = FDetachmentTransformRules(EDetachmentRule::KeepWorld, true);
+                TireNiagaraComponents[WheelIndex]->DetachFromComponent(DetachmentTransformRules);
+                TireNiagaraComponents[WheelIndex] = nullptr;
+            }
+        }
+    }
+
+
+
 }

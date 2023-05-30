@@ -33,6 +33,28 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	float RevPercent = 0.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<USceneComponent*> TireEmitters;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FX")
+	class USceneComponent *TireEmitterBackLeft;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FX")
+	class USceneComponent *TireEmitterBackRight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FX")
+	class UNiagaraSystem* TireNiagaraSysytem;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FX|Variable Names")
+	FName SmokeSpawnRate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FX|Variable Names")
+	FName SkidMarkOpacity;
+
+
+private:
+	TArray<class UNiagaraComponent*> TireNiagaraComponents;
+	float TireEffectsCooldown;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -44,4 +66,8 @@ public:
 
 	void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent);
 	virtual void Tick(float DeltaTime) override;
+
+private:
+
+	void TireEffects();
 };
