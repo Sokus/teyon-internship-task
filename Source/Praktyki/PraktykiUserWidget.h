@@ -23,4 +23,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateLaps(int Laps, int MaxLaps);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateTimeDelta(float TimeDelta);
 };

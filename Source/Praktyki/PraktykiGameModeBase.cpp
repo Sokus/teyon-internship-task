@@ -24,6 +24,14 @@ void APraktykiGameModeBase::OnZoneOverlap(AActor *Zone)
     {
         if (ZoneActors[ZoneIndex] != Zone) continue;
 
+
+        ZoneInteractionInfos[ZoneIndex].Time = Time;
+        if (ZoneInteractionInfos[ZoneIndex].LastTime != 0.0f)
+        {
+            float TimeDelta = ZoneInteractionInfos[ZoneIndex].Time - ZoneInteractionInfos[ZoneIndex].LastTime;
+            PraktykiUserWidget->UpdateTimeDelta(TimeDelta);
+        }
+
         if (APraktykiZone *PraktykiZone = Cast<APraktykiZone>(Zone))
         {
             switch (PraktykiZone->Type)
@@ -67,6 +75,7 @@ void APraktykiGameModeBase::OnZoneOverlap(AActor *Zone)
                         for (int32 ClearZoneIndex = 0; ClearZoneIndex < ZoneActors.Num(); ClearZoneIndex += 1)
                         {
                             ZoneInteractionInfos[ClearZoneIndex].bWasVisited = false;
+                            ZoneInteractionInfos[ClearZoneIndex].LastTime = ZoneInteractionInfos[ClearZoneIndex].Time;
                         }
                         bCutDetected = false;
                         Time = 0.0f;
