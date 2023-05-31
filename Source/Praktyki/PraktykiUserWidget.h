@@ -26,4 +26,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateTimeDelta(float TimeDelta);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateSpeed(float Speed);
 };

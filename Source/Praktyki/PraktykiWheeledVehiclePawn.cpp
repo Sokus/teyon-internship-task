@@ -75,8 +75,6 @@ void APraktykiWheeledVehiclePawn::Tick(float DeltaTime)
 
     float EngineRPM = GetVehicleMovementComponent()->PhysicsVehicleOutput()->EngineRPM;
     RevPercent = (EngineRPM - IdleRPM) / (MaxRPM - IdleRPM);
-    //NormalizedEngineRPM = GetVehicleMovementComponent()->PhysicsVehicleOutput()->EngineRPM / 9000.0f;
-    //this->GetVehicleMovementComponent()->SetThrottleInput(0.1f);
 
     if (TireEffectsCooldown <= 0.0f)
     {
@@ -86,6 +84,14 @@ void APraktykiWheeledVehiclePawn::Tick(float DeltaTime)
     else
     {
         TireEffectsCooldown -= DeltaTime;
+    }
+
+    AGameModeBase *GameModeBase = UGameplayStatics::GetGameMode(GetWorld());
+    if (APraktykiGameModeBase *PraktykiGameModeBase = Cast<APraktykiGameModeBase>(GameModeBase))
+    {
+        float MPHToKPH = 1.609344f;
+        float SpeedMPH = GetVehicleMovementComponent()->GetForwardSpeedMPH();
+        PraktykiGameModeBase->UpdateSpeed(SpeedMPH * MPHToKPH);
     }
 
     Super::Tick(DeltaTime);
@@ -134,7 +140,4 @@ void APraktykiWheeledVehiclePawn::TireEffects()
             }
         }
     }
-
-
-
 }

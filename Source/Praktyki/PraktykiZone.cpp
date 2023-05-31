@@ -7,15 +7,11 @@
 
 #include "Kismet/GameplayStatics.h"
 
-// Sets default values
 APraktykiZone::APraktykiZone()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
-// Called when the game starts or when spawned
 void APraktykiZone::BeginPlay()
 {
 	Super::BeginPlay();
@@ -23,11 +19,9 @@ void APraktykiZone::BeginPlay()
 	OnActorBeginOverlap.AddDynamic(this, &APraktykiZone::OnActorOverlap);
 }
 
-// Called every frame
 void APraktykiZone::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void APraktykiZone::OnActorOverlap(AActor *OverlappedActor, AActor *OtherActor)

@@ -13,6 +13,14 @@ APraktykiGameModeBase::APraktykiGameModeBase()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+void APraktykiGameModeBase::UpdateSpeed(float Speed)
+{
+    if (PraktykiUserWidget)
+    {
+        PraktykiUserWidget->UpdateSpeed(Speed);
+    }
+}
+
 void APraktykiGameModeBase::OnWentOffTrack(void)
 {
     bCutDetected = true;
@@ -29,7 +37,10 @@ void APraktykiGameModeBase::OnZoneOverlap(AActor *Zone)
         if (ZoneInteractionInfos[ZoneIndex].LastTime != 0.0f)
         {
             float TimeDelta = ZoneInteractionInfos[ZoneIndex].Time - ZoneInteractionInfos[ZoneIndex].LastTime;
-            PraktykiUserWidget->UpdateTimeDelta(TimeDelta);
+            if (PraktykiUserWidget)
+            {
+                PraktykiUserWidget->UpdateTimeDelta(TimeDelta);
+            }
         }
 
         if (APraktykiZone *PraktykiZone = Cast<APraktykiZone>(Zone))
@@ -55,7 +66,11 @@ void APraktykiGameModeBase::OnZoneOverlap(AActor *Zone)
                         if ((bCutDetected == false) && (BestTime == 0.0f || BestTime > Time))
                         {
                             BestTime = Time;
-                            PraktykiUserWidget->UpdateBestTime(BestTime);
+
+                            if (PraktykiUserWidget)
+                            {
+                                PraktykiUserWidget->UpdateBestTime(BestTime);
+                            }
                         }
 
                         LastTime = Time;
@@ -69,8 +84,11 @@ void APraktykiGameModeBase::OnZoneOverlap(AActor *Zone)
                             Laps += 1;
                         }
 
-                        PraktykiUserWidget->UpdateLastTime(LastTime, bCutDetected);
-                        PraktykiUserWidget->UpdateLaps(Laps, LapLimit);
+                        if (PraktykiUserWidget)
+                        {
+                            PraktykiUserWidget->UpdateLastTime(LastTime, bCutDetected);
+                            PraktykiUserWidget->UpdateLaps(Laps, LapLimit);
+                        }
 
                         for (int32 ClearZoneIndex = 0; ClearZoneIndex < ZoneActors.Num(); ClearZoneIndex += 1)
                         {
@@ -119,7 +137,10 @@ void APraktykiGameModeBase::BeginPlay()
         TimeLeft = PraktykiGameInstance->TimeLimit;
         LapLimit = PraktykiGameInstance->LapLimit;
     }
-    PraktykiUserWidget->UpdateLaps(Laps, LapLimit);
+    if (PraktykiUserWidget)
+    {
+        PraktykiUserWidget->UpdateLaps(Laps, LapLimit);
+    }
 }
 
 void APraktykiGameModeBase::EndPlay(EEndPlayReason::Type EndPlayReason)
@@ -143,5 +164,4 @@ void APraktykiGameModeBase::Tick(float DeltaTime)
         TimeLeft -= DeltaTime;
         if (TimeLeft < 0.0f) TimeLeft = 0.0f;
     }
-
 }

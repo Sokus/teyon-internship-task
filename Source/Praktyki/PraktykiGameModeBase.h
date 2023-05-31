@@ -29,6 +29,9 @@ class PRAKTYKI_API APraktykiGameModeBase : public AGameModeBase
 public:
 	APraktykiGameModeBase();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UPraktykiUserWidget *PraktykiUserWidget;
+
 	UFUNCTION(BlueprintCallable)
 	float GetTime() { return Time; }
 
@@ -41,11 +44,10 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void GameFinished();
 
+	void UpdateSpeed(float Speed);
+
 	void OnWentOffTrack(void);
 	void OnZoneOverlap(AActor *Zone);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UPraktykiUserWidget *PraktykiUserWidget;
 
 protected:
 	bool bLapsStarted;
@@ -62,9 +64,7 @@ protected:
 	virtual void EndPlay(EEndPlayReason::Type EndPlayReason);
 	virtual void Tick(float DeltaTime) override;
 
-
 private:
 	TArray<AActor*> ZoneActors;
 	TArray<FZoneInteractionInfo> ZoneInteractionInfos;
-
 };
