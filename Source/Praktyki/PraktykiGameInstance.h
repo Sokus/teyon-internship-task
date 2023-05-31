@@ -20,5 +20,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float TimeLimit;
-
 };
