@@ -4,7 +4,7 @@
 - [x] Main Menu with adjustable parameters
 - [x] Game ends when conditions are met
 - [x] Keyboard and Controller input
-- [x] End Screen
+- [x] Post-game screen
 
 ## Suggested Features
 - [x] Off-track detection and time invalidation
