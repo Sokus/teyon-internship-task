@@ -49,6 +49,8 @@ void APraktykiGameModeBase::OnZoneOverlap(AActor *Zone)
             {
                 case EPraktykiZoneType::StartFinish:
                 {
+
+
                     if (ZoneInteractionInfos[ZoneIndex].bWasVisited)
                     {
                         if (!bCutDetected)
@@ -152,10 +154,10 @@ void APraktykiGameModeBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-    Time += DeltaTime;
-
     if (bLapsStarted)
     {
+        Time += DeltaTime;
+
         if (TimeLeft > 0.0f && TimeLeft <= DeltaTime)
         {
             GameFinished();
